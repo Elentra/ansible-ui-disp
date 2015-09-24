@@ -11,14 +11,15 @@
 class BasicAuth {
 
 /* Keys */
-protected $RSA_PrivateKey = "";
-protected $RSA_PublicKey = "";
 protected $RSA_BlockDivider = " ";
 
 	/* Main methods */
 
 	public function AuthOnSSHA($authPassword, $authHash)
 	{
+		$keyChain = file("core/keys.chain");
+		$this->RSA_PrivateKey = $keyChain[0];
+		$this->RSA_PublicKey = $keyChain[1];
 		if(($authPassword == "") or ($authHash == ""))
 		{
 			throw new Exception("Provided invalid credentials");
@@ -80,7 +81,6 @@ protected $RSA_BlockDivider = " ";
 	}
 
 	/* Cryptography */
-	/* Yes, I'm gorgeous ^_^ */
 	public function RSAEncode($Data)
 	{
 		$myKey = $this->acquireKeys($this->RSA_PublicKey);
