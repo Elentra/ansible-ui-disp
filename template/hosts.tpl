@@ -1,7 +1,7 @@
 <?php require_once("template/header.tpl"); ?>
 <div class="container">
   <header class="navbar">
-    <div class="navbar-inner">
+    <div class="navbar navbar-inverse">
       <a class="brand" href="#">Ansible UI</a>
       <?php require_once("template/nav.tpl"); ?>
       <?php require_once("template/nav-pane.tpl"); ?>

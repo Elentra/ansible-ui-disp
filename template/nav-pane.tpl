@@ -2,7 +2,7 @@
 <?php if($_SESSION['name'] != "") { ?>
                         <div class="pull-right">
                             <ul class="nav">
-                                <li class="active"><a href="#">Welcome, <b><?php echo $_SESSION['name']; ?></b></a></li>
+                                <li class="active"><a href="users.php?uid=<?php echo $_SESSION['id']; ?>">Welcome, <b><?php echo $_SESSION['name']; ?></b></a></li>
                                 <li><a href="<?php echo $config['system_root']; ?>?logout">Sign Out</a></li>
                             </ul>
                         </div>

@@ -9,18 +9,24 @@
   </header>
   <div class="row-fluid">
     <div class="span3 bs-docs-sidebar">
+      <h3>Users</h3>
+      <h4>Existing users:</h4>
       <!--Sidebar content-->
       <ul class="nav nav-list bs-docs-sidenav">
-          <?php echo $viewDashboardTasks; ?>
-        </ul>
+	<?php echo $viewUserList; ?>
+      </ul>
+      <ul class="nav nav-list bs-docs-sidenav">
+        <li><a href="users.php?create" class="btn btn-large btn-primary"><i class="fa fa-user"></i> Create a new user</a></li>
+      </ul>
     </div>
     <div class="span9">
       <!--Body content-->
-	<?php if($taskProperty) { require_once("template/dashboard.show.tpl"); } else { require_once("template/dashboard.error.tpl"); } ?>
+        <?php require_once("template/".$loadFormUsers); ?>
     </div>
   </div>
 
   <?php require_once("template/footer.tpl"); ?>
+
 </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>

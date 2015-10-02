@@ -20,20 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>mailtest.corp.servdesk.ru</td>
-            <td>17</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td>mailtest2.corp.servdesk.ru</td>
-            <td>17</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
+	   <?php echo $viewStatusBlock; ?>
         </tbody>
       </table>
       </div>
@@ -49,43 +36,16 @@
         </thead>
         <tbody>
           <tr>
-            <td rowspan="4">Frontend</td>
-            <td>www1.ansible.org</td>
-            <td>192.168.1.1</td>
+            <td rowspan="2">Group</td>
+            <td>host1.domain.tld</td>
+            <td>192.168.0.1</td>
             <td><span class="badge badge-success">Ok</span></td>
           </tr>
           <tr>
-            <td>www2.ansible.org</td>
-            <td>192.168.1.2</td>
+            <td>host1.domain.tld</td>
+            <td>192.168.0.2</td>
             <td><span class="badge badge-important">Error</span></td>
           </tr>
-          <tr>
-            <td>www3.ansible.org</td>
-            <td>192.168.1.3</td>
-            <td><span class="badge badge-success">Ok</span></td>
           </tr>
-          <tr>
-            <td>www4.ansible.org</td>
-            <td>192.168.1.4</td>
-            <td><span class="badge badge-success">Ok</span></td>
-          </tr>
-
-          <tr>
-            <td rowspan="3">Database</td>
-            <td>db-master1.ansible.org</td>
-            <td>192.168.10.1</td>
-            <td><span class="badge badge-success">Ok</span></td>
-          </tr>
-          <tr>
-            <td>db-slave1.ansible.org</td>
-            <td>192.168.10.2</td>
-            <td><span class="badge badge-success">Ok</span></td>
-          </tr>
-          <tr>
-            <td>db-slave2.ansible.org</td>
-            <td>192.168.10.3</td>
-            <td><span class="badge badge-success">Ok</span></td>
-          </tr>
-
         </tbody>
       </table>
