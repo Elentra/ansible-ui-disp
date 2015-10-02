@@ -9,7 +9,9 @@
 	"Database name not provided"
 	"Failed to establish connection with database"
 	"Trying to create database with empty name"
-	"Table name was empty"
+	"Table name is empty"
+	"Data array is empty"
+	"Incorrect delete ID"
 
 */
 class Database {
@@ -100,7 +102,7 @@ protected $dbConnectionLink;
 	{
 		if($tableName == "")
 		{
-			throw new Exception("Table name was empty");
+			throw new Exception("Table name is empty");
 			return false;		
 		}
 		$dbQuery = "SELECT * FROM `".$tableName."`";
@@ -120,6 +122,62 @@ protected $dbConnectionLink;
 			}
 			return $resultArray;
 		}
+	}
+	public function insertData($tableName, array $placedData)
+	{
+		if($tableName == "")
+		{
+			throw new Exception("Table name is empty");
+			return false;		
+		}
+		if(count($placedData) == 0)
+		{
+			throw new Exception("Data array is empty");
+			return false;		
+		}
+		if(count($placedData) > 0)
+		{
+			foreach($placedData as $field => $value)
+			{
+				$fields[] = $field;
+				if($value === "now()")
+				{
+					$values[] = "now()";
+				} else {
+					$values[] = "'".$value."'";
+				}
+			}
+			$dbQuery = "INSERT INTO `".$tableName."` (".implode(",", $fields).") VALUES (".implode(",", $values).");";
+			$getResult = @mysql_query($dbQuery);
+			if($getResult === false)
+			{
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+	public function deleteRow($tableName, $rowID)
+	{
+		if($tableName == "")
+		{
+			throw new Exception("Table name is empty");
+			return false;		
+		}
+		if(($rowID <= 0) or ($rowID == ""))
+		{
+			throw new Exception("Incorrect delete ID");
+			return false;		
+		}
+		$dbQuery = "DELETE FROM `".$tableName."` WHERE id='".$rowID."';";
+		$getResult = @mysql_query($dbQuery);
+		if($getResult === false)
+		{
+			return false;
+		} else {
+			return true;
+		}
+		
 	}
 	public function escapeData($escData)
 	{

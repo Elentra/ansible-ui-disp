@@ -27,6 +27,14 @@ if(isset($_GET['task']))
 {
 	$taskProperty = $Ansible->findTaskById($_GET['task']);
 	$tFileContent = $Ansible->parseTaskFile($taskProperty['log_file']);
+	if($tFileContent != false)
+	{
+		$statusParseDown = $Ansible->statusFromFile($tFileContent);
+		if(count($statusParseDown) > 0) foreach($statusParseDown as $hostStatus)
+		{
+			$viewStatusBlock .= "<tr><td>".$hostStatus['name']."</td><td>".$hostStatus['ok']."</td><td>".$hostStatus['changed']."</td><td>".$hostStatus['unreachable']."</td><td>".$hostStatus['failed']."</td></tr>";
+		}
+	}
 }
 
 /* Logic area */

@@ -31,18 +31,45 @@ protected $linkDatabase;
 	{
 		$taskContents = file_get_contents($taskFilePath);
 		$taskContents = preg_replace('/(\*.*)/', '*', $taskContents);
+		$taskContents = preg_replace('/( * )/', ' ', $taskContents);
 		$taskContents = preg_replace('/\n*$/', '', $taskContents);
+		$taskContents = preg_replace('/\s\:/', ':', $taskContents);
 		$midArray = explode("\n\n", $taskContents);
 		foreach($midArray as $entry)
 		{
 			$entry = str_replace("\n", "<br/>", $entry);
 			$cacheEntry = explode("*", $entry);
+			$retEntry = array();
 			$cacheEntry[0] = preg_replace("/^\<br\/\>/", "", $cacheEntry[0]);
 			$cacheEntry[1] = preg_replace("/^\<br\/\>/", "", $cacheEntry[1]);
 			$cacheEntry[1] = explode("<br/>", $cacheEntry[1]);
-			$returnArray[] = $cacheEntry;
+			$retEntry['header'] = trim($cacheEntry[0]);
+			$retEntry['data'] = $cacheEntry[1];
+			unset($cacheEntry);
+			$retEntry['type'] = strtolower(trim(preg_split("/\[|\:/", $retEntry['header'])[0]));
+			$returnArray[] = $retEntry;
 		}
 		return $returnArray;
+	}
+	public function statusFromFile($taskFileContents)
+	{
+		foreach($taskFileContents as $eventContent)
+		{
+			if($eventContent['type'] == "play recap")
+			{
+				foreach($eventContent['data'] as $hostStatus)
+				{
+				$parsed = preg_split("/\:|\s/", $eventContent['data'][0]);
+				$host['name'] = preg_replace("/.*\=/", "", $parsed[0]);
+				$host['ok'] = preg_replace("/.*\=/", "", $parsed[2]);
+				$host['changed'] = preg_replace("/.*\=/", "", $parsed[3]);
+				$host['unreachable'] = preg_replace("/.*\=/", "", $parsed[4]);
+				$host['failed'] = preg_replace("/.*\=/", "", $parsed[5]);
+				$hosts[] = $host;
+				}
+			}
+		}
+		return $hosts;
 	}
 
 	/* Additional methods */
@@ -76,12 +103,14 @@ protected $linkDatabase;
 	/* HTML Draw */
 	public function playbooksList($idActive = "")
 	{
-		foreach($this->registeredProjects as $currentProject)
+		if(count($this->registeredProjects) > 0)
 		{
-			$hover = "";
-			if($currentProject['id'] == $idActive) $hover = " class=\"active\"";
-			$projectList .= "<li".$hover."><a href=\"playbooks.php?pr=".$currentProject['id']."\"><i class=\"icon-chevron-right\"></i> ".$currentProject['name']."</a></li>";
-			
+			foreach($this->registeredProjects as $currentProject)
+			{
+				$hover = "";
+				if($currentProject['id'] == $idActive) $hover = " class=\"active\"";
+				$projectList .= "<li".$hover."><a href=\"playbooks.php?pr=".$currentProject['id']."\"><i class=\"icon-chevron-right\"></i> ".$currentProject['name']."</a></li>";	
+			}
 		}
 		return $projectList;
 	}

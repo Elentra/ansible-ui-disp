@@ -38,7 +38,7 @@ protected $RSA_BlockDivider = " ";
 	/* Session management */
 	public function sessionEstablish($credentialContainer)
 	{
-		$_SESSION['id'] = $credentialContainer['login'];
+		$_SESSION['id'] = $credentialContainer['id'];
 		$_SESSION['login'] = $credentialContainer['login'];
 		$_SESSION['name'] = $credentialContainer['name'];
 		$_SESSION['key'] = $this->RSAEncode($credentialContainer['password']);
