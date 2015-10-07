@@ -72,6 +72,12 @@ protected $linkDatabase;
 		return $hosts;
 	}
 
+	public function runPriorityTask($projectName, $projectTarget)
+	{
+		
+
+	}
+
 	/* Additional methods */
 	public function getProjectProperty($projectId, $projectField)
 	{
@@ -109,10 +115,27 @@ protected $linkDatabase;
 			{
 				$hover = "";
 				if($currentProject['id'] == $idActive) $hover = " class=\"active\"";
-				$projectList .= "<li".$hover."><a href=\"playbooks.php?pr=".$currentProject['id']."\"><i class=\"icon-chevron-right\"></i> ".$currentProject['name']."</a></li>";	
+				$projectList .= "<li".$hover."><a href=\"?pr=".$currentProject['id']."\"><i class=\"icon-chevron-right\"></i> ".$currentProject['name']."</a></li>";	
 			}
 		}
 		return $projectList;
+	}
+
+	public function fetchPlaybookBundles($projectId, $idActive = "")
+	{
+		$projectRoot = $this->registeredProjects[$projectId-1]['project_root'];
+		$projectBundles = scandir($projectRoot);
+		$returnString = "";
+		foreach($projectBundles as $projectItem)
+		{
+			if(($projectItem == "testing") or ($projectItem == "stage") or ($projectItem == "production"))
+			{
+				$class = "";
+				if($idActive == $projectItem) $class = " class=\"active\"";
+				$returnString .= "<li".$class."><a href=\"?pr=".$projectId."&bundleID=".$projectItem."\">".$projectItem."</a></li>";
+			}
+		}
+		return $returnString;
 	}
 
 	public function tasksList($taskLimit = "")
@@ -125,6 +148,34 @@ protected $linkDatabase;
 			$taskShow .= "<li".$hover."><a href=\"dashboard.php?task=".$this->registeredTasks[$task]['id']."\"><i class=\"icon-chevron-right\"></i> ".$this->registeredTasks[$task]['timestamp']."</a></li>";
 		}
 		return $taskShow;
+	}
+
+	public function hostsList($projectName, $projectTarget)
+	{
+		$projectPath = "";
+		foreach($this->registeredProjects as $enumProject)
+		{
+			if($enumProject['id'] === $projectName) $projectPath = $enumProject['project_root'];
+		}
+		if($projectPath === "")
+		{
+			throw new Exception("Incorrect project selected");
+			return false;
+		}
+		if(!(file_exists($projectPath."/".$projectTarget)))
+		{
+			throw new Exception("Selected project target group does not exist");
+			return false;
+		}
+		$fileContents = file($projectPath."/".$projectTarget);
+		foreach($fileContents as $fileEntry)
+		{
+			if(preg_match("/\[|\]|^\s*$|^#/", $fileEntry) == false)
+			{
+				$hosts[] = explode(" ", $fileEntry)[0];
+			}
+		}
+		return $hosts;
 	}
 }
 ?>
