@@ -9,12 +9,14 @@
   </header>
   <div class="row-fluid">
     <div class="span3 bs-docs-sidebar">
+      <h3>Tasks list</h3>
       <!--Sidebar content-->
       <ul class="nav nav-list bs-docs-sidenav">
           <?php echo $viewDashboardTasks; ?>
         </ul>
     </div>
     <div class="span9">
+      <div class="well"><h1>Dashboard</h1></div>
       <!--Body content-->
 	<?php if($taskProperty) { require_once("template/dashboard.show.tpl"); } else { require_once("template/dashboard.error.tpl"); } ?>
     </div>

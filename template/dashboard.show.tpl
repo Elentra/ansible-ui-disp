@@ -28,24 +28,14 @@
         <caption><h4>Hosts</h4></caption>
         <thead>
           <tr>
-            <th>Group</th>
+            <th>Role</th>
+            <th>Task</th>
             <th>Host</th>
-            <th>IP</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td rowspan="2">Group</td>
-            <td>host1.domain.tld</td>
-            <td>192.168.0.1</td>
-            <td><span class="badge badge-success">Ok</span></td>
-          </tr>
-          <tr>
-            <td>host1.domain.tld</td>
-            <td>192.168.0.2</td>
-            <td><span class="badge badge-important">Error</span></td>
-          </tr>
-          </tr>
+          <?php echo $viewTaskBlock; ?>
         </tbody>
       </table>
+<br/><br/>

@@ -9,13 +9,14 @@
   </header>
   <div class="row-fluid">
     <div class="span3 bs-docs-sidebar">
-      <h3>Playbooks</h3>
+      <h3>Playbooks list</h3>
       <!--Sidebar content-->
       <ul class="nav nav-list bs-docs-sidenav">
           <?php echo $viewPlaybooksList; ?>
       </ul>
     </div>
     <div class="span9">
+      <div class="well"><h1>Playbooks</h1></div>
       <!--Body content-->
 <?php if($playbookProperty) { require_once("template/playbooks.show.tpl"); } else { require_once("template/playbooks.error.tpl"); } ?>
 
