@@ -12,6 +12,7 @@
 	"Table name is empty"
 	"Data array is empty"
 	"Incorrect delete ID"
+	"Data row is empty"
 
 */
 class Database {
@@ -178,6 +179,37 @@ protected $dbConnectionLink;
 			return true;
 		}
 		
+	}
+	public function changeDataRow($tableName, $rowID, array $newData)
+	{
+		if($tableName == "")
+		{
+			throw new Exception("Table name is empty");
+			return false;		
+		}
+		if(($rowID <= 0) or ($rowID == ""))
+		{
+			throw new Exception("Incorrect delete ID");
+			return false;		
+		}
+		if(!(is_array($newData)) or (count($newData) == 0))
+		{
+			throw new Exception("Data row is empty");
+			return false;		
+		}
+		foreach($newData as $columnName => $columnValue)
+		{
+			$assignedColumns[] = $columnName."='".$columnValue."'";
+		}
+		$dbQuery = "UPDATE `".$tableName."` SET ".implode(",", $assignedColumns)." WHERE id='".$rowID."';";
+		$getResult = @mysql_query($dbQuery);
+		if($getResult === false)
+		{
+			return false;
+		} else {
+			return true;
+		}
+	
 	}
 	public function escapeData($escData)
 	{

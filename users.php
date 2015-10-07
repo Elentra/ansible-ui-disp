@@ -19,12 +19,12 @@ require_once("core/class.ansible.abstraction.core.php");
 $Ansible = new Ansible($DB);
 
 
-/* IF-Event - create user start */
+/* IF-Event - Create user */
 if(isset($_GET['create']))
 {
 	$loadFormUsers = "users.create.tpl";
 }
-/* IF-Event - create user execute */
+/* IF-Event - Create user catch up */
 elseif(isset($_POST['login']) and isset($_POST['password-one']) and isset($_POST['password-two']) and isset($_POST['class']))
 {
 	$createUser = true;
@@ -51,7 +51,7 @@ elseif(isset($_POST['login']) and isset($_POST['password-one']) and isset($_POST
 	}
 	$loadFormUsers = "users.default.tpl";
 }
-/* IF-Event - load user */
+/* Event hook - Delete user */
 elseif(isset($_GET['deleteID']) and ($_GET['deleteID'] != "") and ($_GET['deleteID'] > 0))
 {
 	$rowDeleted = false;
@@ -71,10 +71,18 @@ elseif(isset($_GET['deleteID']) and ($_GET['deleteID'] != "") and ($_GET['delete
 	}
 	$loadFormUsers = "users.default.tpl";
 }
-/* IF-Event - load user */
-elseif(isset($_GET['uid']))
+/* Event hook - Show or modify specific user */
+elseif(isset($_GET['uid']) or isset($_GET['modifyID']))
 {
-	$searchID = $DB->escapeData($_GET['uid']);
+	if(isset($_GET['modifyID']))
+	{
+		$userID = $_GET['modifyID'];
+		$modifyUser = true;
+	} elseif(isset($_GET['uid'])) {
+		$userID = $_GET['uid'];
+		$modifyUser = false;
+	}
+	$searchID = $DB->escapeData($userID);
 	$Users = $DB->getData("users", "WHERE id=".$searchID." LIMIT 1");
 	if($Users)
 	{
@@ -83,6 +91,7 @@ elseif(isset($_GET['uid']))
 		$showUserName = $Users[0]['name'];
 		$showUserGroup = $Users[0]['class'];
 		$showUserCreated = $Users[0]['id'];
+		$identifyCode = $Auth->RSAEncode($showUserId." ".$showUserLogin);
 		$loadFormUsers = "users.show.tpl";
 	} else {
 		$spawnError = true;
@@ -90,7 +99,35 @@ elseif(isset($_GET['uid']))
 		$loadFormUsers = "users.default.tpl";
 	}
 }
-/* IF-Event - default */
+/* Event hook - Modify user catch up */
+elseif(isset($_POST['modifyuser']))
+{
+	if(isset($_POST['name'])) $alterUser['name'] = $DB->escapeData($_POST['name']);
+	if(isset($_POST['class'])) $alterUser['class'] = $DB->escapeData($_POST['class']);
+	/* Check password integrity */
+	if(isset($_POST['new-password-one']))
+	{
+		if(($_POST['new-password-one'] == $_POST['new-password-two']) and ($_POST['new-password-one'] != ""))
+		{
+			$alterUser['password'] = $DB->escapeData($_POST['new-password-one']);
+		}
+	}
+	if(isset($_POST['uid'])) if($_POST['uid'] != "")
+	{
+		$changedUser = $DB->changeDataRow("users", $_POST['uid'], $alterUser);
+	}
+	if($changedUser)
+	{
+		$spawnSuccess = true;
+		$spawnSuccessText = "User <strong>".$_POST['uid_name']."</strong> has been updated successfully.";
+	} else {
+		$spawnError = true;
+		$spawnErrorText = "Unable to update user <strong>".$alterUser['name']."</strong>";
+		$loadFormUsers = "users.default.tpl";
+	}
+	$loadFormUsers = "users.default.tpl";
+}
+/* Event hook - Default action */
 else
 {
 	$loadFormUsers = "users.default.tpl";
